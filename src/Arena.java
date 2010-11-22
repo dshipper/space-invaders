@@ -38,12 +38,12 @@ public class Arena extends JPanel {
 			        reset();
 			    else if (e.getKeyCode() == KeyEvent.VK_SPACE){
 			    	bullets.add(new Bullet(tank.getX(), tank.getY(), VELOCITY_FROM_TANK));
-			    	System.out.println("Created new bullet at: " + tank.getX());
+			    	//System.out.println("Created new bullet at: " + tank.getX());
 			    }
 			}
 			
 			public void keyReleased(KeyEvent e) {
-				paddle.setVelocity(0, 0);
+				tank.setVelocity(0, 0);
 			}
 		});
 	}
