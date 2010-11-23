@@ -7,11 +7,9 @@ public class Bullet extends GameObject{
 	final static int VELOCITY_X = 0;
 	final static int VELOCITY_Y_FROM_TANK = -1;
 	final static int VELOCITY_Y_FROM_ALIEN = 1;
-	private boolean isAlive;
 	
 	public Bullet(int x, int y, int velocity){
 		super(x, y, VELOCITY_X, velocity, WIDTH, HEIGHT);
-		this.isAlive = true;
 	}
 	
 	public void draw(Graphics g){
@@ -25,4 +23,10 @@ public class Bullet extends GameObject{
 		if (y < 0 || y > bottomBound)
 			this.isAlive = false;
 	}
+
+	public boolean isAlive() {
+		return isAlive;
+	}
+	
+	
 }

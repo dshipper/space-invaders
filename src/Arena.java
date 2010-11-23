@@ -10,6 +10,7 @@ public class Arena extends JPanel {
 	private Alien ball;
 	private Tank tank;
 	private  LinkedList<Bullet> bullets;
+	private Invaders invaders;
 
 	private int interval = 35; // Milliseconds between updates.
 	private Timer timer; // Timer fires to animate one step.
@@ -38,7 +39,6 @@ public class Arena extends JPanel {
 			        reset();
 			    else if (e.getKeyCode() == KeyEvent.VK_SPACE){
 			    	bullets.add(new Bullet(tank.getX(), tank.getY(), VELOCITY_FROM_TANK));
-			    	//System.out.println("Created new bullet at: " + tank.getX());
 			    }
 			}
 			
@@ -49,21 +49,23 @@ public class Arena extends JPanel {
 	}
 
 	public void reset() {
-		ball = new Alien(0, 0, 2, 3);
 		tank = new Tank(COURTWIDTH, COURTHEIGHT);
 		bullets = new LinkedList();
+		invaders = new Invaders(5,5,1,1);
 		grabFocus();
 	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g); // Paint background, border
-		ball.draw(g);
+		invaders.draw(g);
 		tank.draw(g);
 		if(bullets != null){
 			Iterator itr = bullets.iterator();
 			while(itr.hasNext()){
 				Bullet b = (Bullet) itr.next();
-				b.draw(g);
+				if(b.isAlive()){
+					b.draw(g);
+				}
 			}
 		}
 	}
@@ -72,8 +74,8 @@ public class Arena extends JPanel {
 
 	class TimerAction implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			ball.setBounds(getWidth(), getHeight());
-			ball.move();
+			invaders.setBounds(getWidth(), getHeight());
+			invaders.move();
 			tank.setBounds(getWidth(), getHeight());
 			tank.move();
 			if(bullets != null){
@@ -82,6 +84,7 @@ public class Arena extends JPanel {
 					Bullet b = (Bullet) itr.next();
 					b.setBounds(getWidth(), getHeight());
 					b.move();
+					invaders.checkIntersection(b);
 				}
 			}
 			repaint(); // Repaint indirectly calls paintComponent.

@@ -12,6 +12,8 @@ public abstract class GameObject {
 
     protected int rightBound; // Maximum permissible x, y values.
     protected int bottomBound;
+    
+    protected boolean isAlive;
 
     public GameObject(int x, int y, int velocityX, int velocityY, int width,
             int height) {
@@ -21,6 +23,11 @@ public abstract class GameObject {
         this.velocityY = velocityY;
         this.width = width;
         this.height = height;
+        this.isAlive = true;
+    }
+
+    public void die(){
+    	this.isAlive = false;
     }
 
     public void setBounds(int width, int height) {
@@ -92,6 +99,10 @@ public abstract class GameObject {
     public int getX(){
     	return x;
     }
+    
+    public boolean isAlive(){
+		return isAlive;
+	}
     
     public int getY(){
     	return y;

@@ -7,29 +7,53 @@ public class Alien extends GameObject {
 		super(x, y, velocityX, velocityY, DIAMETER, DIAMETER);
 	}
 
+	public void setY(int y){
+		this.y = y;
+	}
+	
+	public int getY(){
+		return y;
+	}
+	
+	public int getX(){
+		return x;
+	}
+	
+	public int getXVelocity(){
+		return velocityX;
+	}
+	
+	public void setXVelocity(int x){
+		velocityX = x;
+	}
+	
 	public void accelerate() {
-		if (x < 0)
+		if (x < 0){
 			velocityX =  Math.abs(velocityX);
-		else if (x > rightBound)
+		}
+		else if (x > rightBound){
 			velocityX = -Math.abs(velocityX);
-		if (y < 0)
+		}
+		if (y < 0){
 			velocityY =  Math.abs(velocityY);
-		else if (y > bottomBound)
+		}
+		else if (y > bottomBound){
 			velocityY = -Math.abs(velocityY);
+		}
 	}
 
-	// Bounce the ball, if necessary
-	public void bounce(Intersection i) {
-	    switch (i) {
-	    	case NONE: break;
-	    	case UP: velocityY = -Math.abs(velocityY); break;
-	    	case DOWN: velocityY = Math.abs(velocityY); break;
-	    	case LEFT: velocityX = -Math.abs(velocityX); break;
-	    	case RIGHT: velocityX = Math.abs(velocityX); break;
-	    }
+	public void move(){
+		super.move();
 	}
+	
 
 	public void draw(Graphics g) {
-		g.fillOval(x, y, DIAMETER, DIAMETER);
+		if(isAlive){
+			g.fillOval(x, y, DIAMETER, DIAMETER);
+		}
+	}
+
+	public boolean isAlive() {
+		return isAlive;
 	}
 }
