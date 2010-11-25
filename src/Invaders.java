@@ -25,7 +25,14 @@ public class Invaders {
 		Iterator itr = aliens.iterator();
 		while(itr.hasNext()){
 			Alien a = (Alien) itr.next();
+			if(!a.isAlive()){
+				itr.remove();
+			}
 			a.draw(g);
+			if(!a.isAlive()){
+				aliens.remove(a);
+			}
+			
 		}
 	}
 	public void setBounds(int width, int height) {
@@ -44,8 +51,7 @@ public class Invaders {
 		while(itr.hasNext()){
 			Alien a = (Alien) itr.next();
 			a.move();
-			if(a.getX() == 0 || a.getX() >= xBound-Alien.DIAMETER){
-				System.out.println("YOOOO");
+			if(a.getX() <= 0 || a.getX() >= xBound-Alien.DIAMETER){
 				changeY = true;
 			}
 		}
@@ -53,21 +59,24 @@ public class Invaders {
 			itr = aliens.iterator();
 			while(itr.hasNext()){
 				Alien a = (Alien) itr.next();
-				a.setY(a.getY() + 3);
+				a.setY(a.getY() + 20);
 				a.setXVelocity(-a.getXVelocity());
 			}
 		}
 		
 	}
-	public void checkIntersection(Bullet b) {
+	public int checkIntersection(Bullet b) {
+		int kills = 0;
 		Iterator itr = aliens.iterator();
 		while(itr.hasNext()){
 			Alien a = (Alien) itr.next();
 			if(b.intersects(a) != Intersection.NONE && b.isAlive() && a.isAlive()){
 				b.die();
 				a.die();
+				kills+=1;
 			}
 		}
+		return kills;
 	}
 	
 	

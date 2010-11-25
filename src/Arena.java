@@ -11,19 +11,20 @@ public class Arena extends JPanel {
 	private Tank tank;
 	private  LinkedList<Bullet> bullets;
 	private Invaders invaders;
+	private Set<Bunker> bunkers;
 
 	private int interval = 35; // Milliseconds between updates.
 	private Timer timer; // Timer fires to animate one step.
 
-	final int COURTWIDTH = 300;
-	final int COURTHEIGHT = 200;
-	final int VELOCITY_FROM_TANK = -1;
-	final int VELOCTIY_FROM_ALIEN = 1;
+	final int COURTWIDTH = 640;
+	final int COURTHEIGHT = 480;
 	
 	final int PADDLE_VEL = 4;
+	
+	private int score = 0;
 
 	public Arena() {
-		setPreferredSize(new Dimension(COURTWIDTH, COURTHEIGHT));
+		setPreferredSize(new Dimension(COURTWIDTH, COURTHEIGHT+20));
 		reset();
 		setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		timer = new Timer(interval, new TimerAction());
@@ -38,7 +39,7 @@ public class Arena extends JPanel {
 			    else if (e.getKeyCode() == KeyEvent.VK_R)
 			        reset();
 			    else if (e.getKeyCode() == KeyEvent.VK_SPACE){
-			    	bullets.add(new Bullet(tank.getX(), tank.getY(), VELOCITY_FROM_TANK));
+			    	bullets.add(new Bullet(tank.getX(), tank.getY(), Bullet.VELOCITY_Y_FROM_TANK));
 			    }
 			}
 			
@@ -52,6 +53,11 @@ public class Arena extends JPanel {
 		tank = new Tank(COURTWIDTH, COURTHEIGHT);
 		bullets = new LinkedList();
 		invaders = new Invaders(5,5,1,1);
+		bunkers = new HashSet<Bunker>();
+		for(int i = 0; i < 4; i++){
+			bunkers.add(new Bunker((i*(Bunker.START_WIDTH+80))+60, COURTHEIGHT-130, 0,0));
+		}
+		score = 0;
 		grabFocus();
 	}
 
@@ -59,18 +65,29 @@ public class Arena extends JPanel {
 		super.paintComponent(g); // Paint background, border
 		invaders.draw(g);
 		tank.draw(g);
+		Iterator bunk = bunkers.iterator();
+		while(bunk.hasNext()){
+			Bunker b = (Bunker) bunk.next();
+			b.draw(g);
+		}
+		int bulletCount = 0;
 		if(bullets != null){
 			Iterator itr = bullets.iterator();
 			while(itr.hasNext()){
 				Bullet b = (Bullet) itr.next();
 				if(b.isAlive()){
 					b.draw(g);
+					bulletCount +=1;
 				}
 			}
 		}
+		g.drawString("Bullets: " + bulletCount, 150, COURTHEIGHT+10);
+		g.drawString("Score: " + score, 50, COURTHEIGHT+10);
+		
 	}
 
 	public void startTimer() { timer.start(); }
+	
 
 	class TimerAction implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
@@ -82,9 +99,22 @@ public class Arena extends JPanel {
 				Iterator itr = bullets.iterator();
 				while(itr.hasNext()){
 					Bullet b = (Bullet) itr.next();
-					b.setBounds(getWidth(), getHeight());
-					b.move();
-					invaders.checkIntersection(b);
+					if(b.isAlive()){
+						b.setBounds(getWidth(), getHeight());
+						b.move();
+						score += invaders.checkIntersection(b);
+						Iterator bunk = bunkers.iterator();
+						while(bunk.hasNext()){
+							Bunker bunker = (Bunker) bunk.next();
+							if(bunker.intersects(b) != Intersection.NONE && b.isAlive()){
+								bunker.degrade();
+								b.die();
+							}
+						}
+					}
+					else{
+						itr.remove();
+					}
 				}
 			}
 			repaint(); // Repaint indirectly calls paintComponent.
