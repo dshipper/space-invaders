@@ -1,10 +1,22 @@
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class Alien extends GameObject {
-	final static int DIAMETER = 21;
+	final static int DIAMETER = 42;
+	private BufferedImage img;
 
 	public Alien(int x, int y, int velocityX, int velocityY) {
 		super(x, y, velocityX, velocityY, DIAMETER, DIAMETER);
+		img = null;
+		try {
+		    img = ImageIO.read(new File("alien.jpg"));
+		} catch (IOException e) {
+		}
+
 	}
 
 	public void setY(int y){
@@ -49,7 +61,8 @@ public class Alien extends GameObject {
 
 	public void draw(Graphics g) {
 		if(isAlive){
-			g.fillOval(x, y, DIAMETER, DIAMETER);
+			//g.fillOval(x, y, DIAMETER, DIAMETER);
+			g.drawImage(img, x,y,null);
 		}
 	}
 

@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 
 
@@ -25,7 +26,9 @@ public class Bunker extends GameObject{
 
 	@Override
 	public void draw(Graphics g) {
+		g.setColor(Color.ORANGE);
 		g.fillRect(x, y, width, height);
+		g.setColor(Color.BLACK);
 	}
 
 }

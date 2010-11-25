@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 
 
@@ -13,8 +14,9 @@ public class Bullet extends GameObject{
 	}
 	
 	public void draw(Graphics g){
-		System.out.println("Position: " + x + "," + y);
+		g.setColor(Color.RED);
 		g.fillRect(x,y, WIDTH, HEIGHT);
+		g.setColor(Color.BLACK);
 	}
 
 	public void accelerate() {

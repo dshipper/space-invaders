@@ -22,6 +22,7 @@ public class Arena extends JPanel {
 	final int PADDLE_VEL = 4;
 	
 	private int score = 0;
+	private int bulletCount = 0;
 
 	public Arena() {
 		setPreferredSize(new Dimension(COURTWIDTH, COURTHEIGHT+20));
@@ -39,7 +40,8 @@ public class Arena extends JPanel {
 			    else if (e.getKeyCode() == KeyEvent.VK_R)
 			        reset();
 			    else if (e.getKeyCode() == KeyEvent.VK_SPACE){
-			    	bullets.add(new Bullet(tank.getX(), tank.getY(), Bullet.VELOCITY_Y_FROM_TANK));
+			    	if(bulletCount <= 3)
+			    		bullets.add(new Bullet(tank.getX()+((Tank.WIDTH/2)-2), tank.getY()-10, Bullet.VELOCITY_Y_FROM_TANK));
 			    }
 			}
 			
@@ -52,12 +54,13 @@ public class Arena extends JPanel {
 	public void reset() {
 		tank = new Tank(COURTWIDTH, COURTHEIGHT);
 		bullets = new LinkedList();
-		invaders = new Invaders(5,5,1,1);
+		invaders = new Invaders(7, 6,1,1);
 		bunkers = new HashSet<Bunker>();
 		for(int i = 0; i < 4; i++){
 			bunkers.add(new Bunker((i*(Bunker.START_WIDTH+80))+60, COURTHEIGHT-130, 0,0));
 		}
 		score = 0;
+		bulletCount = 0;
 		grabFocus();
 	}
 
@@ -70,16 +73,18 @@ public class Arena extends JPanel {
 			Bunker b = (Bunker) bunk.next();
 			b.draw(g);
 		}
-		int bulletCount = 0;
+		
 		if(bullets != null){
+			int newBulletCount = 0;
 			Iterator itr = bullets.iterator();
 			while(itr.hasNext()){
 				Bullet b = (Bullet) itr.next();
 				if(b.isAlive()){
 					b.draw(g);
-					bulletCount +=1;
+					newBulletCount +=1;
 				}
 			}
+			bulletCount = newBulletCount;
 		}
 		g.drawString("Bullets: " + bulletCount, 150, COURTHEIGHT+10);
 		g.drawString("Score: " + score, 50, COURTHEIGHT+10);
