@@ -21,6 +21,15 @@ public class Invaders {
 			}
 		}
 	}
+	
+	public int getSize(){
+		return aliens.size();
+	}
+	
+	public LinkedList<Alien> getAliens(){
+		return aliens;
+	}
+	
 	public void draw(Graphics g) {
 		Iterator itr = aliens.iterator();
 		while(itr.hasNext()){
@@ -59,20 +68,21 @@ public class Invaders {
 			itr = aliens.iterator();
 			while(itr.hasNext()){
 				Alien a = (Alien) itr.next();
-				a.setY(a.getY() + 20);
+				a.setY(a.getY() + 30);
 				a.setXVelocity(-a.getXVelocity());
 			}
 		}
 		
 	}
-	public int checkIntersection(Bullet b) {
+	public int checkIntersection(GameObject b, boolean killBoth) {
 		int kills = 0;
 		Iterator itr = aliens.iterator();
 		while(itr.hasNext()){
 			Alien a = (Alien) itr.next();
 			if(b.intersects(a) != Intersection.NONE && b.isAlive() && a.isAlive()){
 				b.die();
-				a.die();
+				if(killBoth)
+					a.die();
 				kills+=1;
 			}
 		}

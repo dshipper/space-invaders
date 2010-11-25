@@ -4,8 +4,8 @@ import java.awt.Graphics;
 
 public class Bunker extends GameObject{
 	
-	final static int START_WIDTH = 60;
-	final static int START_HEIGHT = 40;
+	final static int START_WIDTH = 39;
+	final static int START_HEIGHT = 26;
 	
 
 	public Bunker(int x, int y, int velocityX, int velocityY) {
@@ -17,6 +17,9 @@ public class Bunker extends GameObject{
 	public void degrade(){
 		width /= 1.1;
 		height /= 1.1;
+		if(width < 10 || height < 10){
+			die();
+		}
 	}
 
 	@Override
@@ -26,9 +29,11 @@ public class Bunker extends GameObject{
 
 	@Override
 	public void draw(Graphics g) {
-		g.setColor(Color.ORANGE);
-		g.fillRect(x, y, width, height);
-		g.setColor(Color.BLACK);
+		if(isAlive){
+			g.setColor(Color.ORANGE);
+			g.fillRect(x, y, width, height);
+			g.setColor(Color.BLACK);
+		}
 	}
 
 }
