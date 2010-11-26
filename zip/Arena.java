@@ -17,7 +17,7 @@ import javax.swing.Timer;
 
 
 @SuppressWarnings("serial")
-public class Arena extends JPanel implements MouseMotionListener{
+public class Arena extends JPanel{
 	private Alien ball;
 	private Tank tank;
 	private  LinkedList<Bullet> bullets;
@@ -36,7 +36,7 @@ public class Arena extends JPanel implements MouseMotionListener{
 	private int score = 0;
 	private int bulletCount = 0;
 	private int aiBulletCount = 0;
-	private int health = 100;
+	private int health = 100000;
 	private int canShoot = 35;
 	
 	private boolean gameOver = false;
@@ -47,7 +47,6 @@ public class Arena extends JPanel implements MouseMotionListener{
 
 	public Arena() {
 		setPreferredSize(new Dimension(COURTWIDTH, COURTHEIGHT+20));
-		addMouseMotionListener(this);
 		reset();
 		setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		timer = new Timer(interval, new TimerAction());
@@ -91,15 +90,6 @@ public class Arena extends JPanel implements MouseMotionListener{
 			}
 		});
 	}
-	
-	public void mouseMoved(MouseEvent e) {
-	       tank.setX(e.getX());
-	}
-
-	public void mouseDragged(MouseEvent e) {
-	       tank.setX(e.getX());
-	}
-
 
 	public void reset() {
 		tank = new Tank(COURTWIDTH, COURTHEIGHT);
@@ -114,7 +104,7 @@ public class Arena extends JPanel implements MouseMotionListener{
 		score = 0;
 		bulletCount = 0;
 		aiBulletCount = 0;
-		health = 100;
+		health = 100000;
 		wave = 0;
 		gameOver = false;
 		grabFocus();
@@ -144,7 +134,6 @@ public class Arena extends JPanel implements MouseMotionListener{
 				}
 				bulletCount = newBulletCount;
 			}
-			
 			if(aiBullets != null){
 				int newBulletCount = 0;
 				Iterator itr = aiBullets.iterator();
@@ -152,12 +141,12 @@ public class Arena extends JPanel implements MouseMotionListener{
 					Bullet b = (Bullet) itr.next();
 					if(b.isAlive()){
 						b.draw(g);
-						newBulletCount +=1;
+						//newBulletCount +=1;
 					}
 				}
-				aiBulletCount = newBulletCount;
+				//bulletCount = newBulletCount;
 			}
-			g.drawString("Bullets: " + (bulletCount +aiBulletCount), 150, COURTHEIGHT+10);
+			g.drawString("Bullets: " + bulletCount, 150, COURTHEIGHT+10);
 			g.drawString("Score: " + score, 50, COURTHEIGHT+10);
 			g.drawString("Health: " + health, 250, COURTHEIGHT+10);
 		}
@@ -250,6 +239,7 @@ public class Arena extends JPanel implements MouseMotionListener{
 				if((a.getX() <= tank.getX()+1) && (a.getX() >= tank.getX()-1)){
 					if(canShoot % 35 == 0){
 						aiBullets.add(new Bullet(a.getX(), a.getY(), Bullet.VELOCITY_Y_FROM_ALIEN));
+						aiBulletCount += 1;
 						canShoot+=7;
 					}
 				}

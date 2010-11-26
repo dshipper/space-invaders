@@ -22,7 +22,7 @@ public class Alien extends GameObject {
 	public void setY(int y){
 		this.y = y;
 	}
-
+	
 	public int getY(){
 		return y;
 	}

@@ -13,24 +13,12 @@ public class SpaceInvaders extends JFrame {
 
 		final JPanel    panel = new JPanel();
 		final JButton   reset = new JButton("Reset");
-		final JButton 	instructions = new JButton("Instructions");
 		final Arena court = new Arena();
 
 		panel.add(reset);
 		reset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				court.reset();
-			}
-		});
-		
-		panel.add(instructions);
-		instructions.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				SwingUtilities.invokeLater(new Runnable(){
-					public void run(){
-						new Instructions();
-					}
-				});
 			}
 		});
 
@@ -43,14 +31,7 @@ public class SpaceInvaders extends JFrame {
 		court.startTimer();
 		court.grabFocus();
 	}
-	
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				new SpaceInvaders();
-			}
-		});
-	}
+
 	
 
 }
