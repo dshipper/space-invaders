@@ -44,6 +44,8 @@ public class Arena extends JPanel implements MouseMotionListener{
 	private Clip laserClip;
 	
 	private int wave;
+	
+	private Mothership mothership;
 
 	public Arena() {
 		setPreferredSize(new Dimension(COURTWIDTH, COURTHEIGHT+20));
@@ -76,8 +78,10 @@ public class Arena extends JPanel implements MouseMotionListener{
 			    	if(bulletCount <= 0){
 			    		bullets.add(new Bullet(tank.getX()+((Tank.WIDTH/2)-2), tank.getY()-10, Bullet.VELOCITY_Y_FROM_TANK));
 			    		try{
-			    			laserClip.stop();
-			                laserClip.start();
+			    			if(!laserClip.isActive()){
+			    				laserClip.stop();
+			    				laserClip.start();
+			    			}
 			             } catch (Exception eS) {
 			                eS.printStackTrace();
 			             }
@@ -117,6 +121,7 @@ public class Arena extends JPanel implements MouseMotionListener{
 		health = 100;
 		wave = 0;
 		gameOver = false;
+		mothership = null;
 		grabFocus();
 	}
 
@@ -125,6 +130,10 @@ public class Arena extends JPanel implements MouseMotionListener{
 		if(!gameOver){
 			invaders.draw(g);
 			tank.draw(g);
+			if(mothership != null){
+				if(mothership.isAlive())
+					mothership.draw(g);
+			}
 			Iterator bunk = bunkers.iterator();
 			while(bunk.hasNext()){
 				Bunker b = (Bunker) bunk.next();
@@ -162,7 +171,7 @@ public class Arena extends JPanel implements MouseMotionListener{
 			g.drawString("Health: " + health, 250, COURTHEIGHT+10);
 		}
 		else{
-			g.drawString("GAME OVER!", 280, 240);
+			g.drawString("GAME OVER!", 200, 200);
 		}
 	}
 
@@ -182,6 +191,12 @@ public class Arena extends JPanel implements MouseMotionListener{
 			invaders.move();
 			tank.setBounds(getWidth(), getHeight());
 			tank.move();
+			if(mothership != null){
+				if(mothership.isAlive()){
+					mothership.setBounds(getWidth(), getHeight());
+					mothership.move();
+				}
+			}
 			if(bullets != null){
 				Iterator itr = bullets.iterator();
 				while(itr.hasNext()){
@@ -190,6 +205,15 @@ public class Arena extends JPanel implements MouseMotionListener{
 						b.setBounds(getWidth(), getHeight());
 						b.move();
 						score += invaders.checkIntersection(b, true);
+						if(mothership != null){
+							if(mothership.isAlive()){
+								if(mothership.intersects(b) != Intersection.NONE){
+									mothership.die();
+									b.die();
+									score += 20;
+								}
+							}
+						}
 						Iterator bunk = bunkers.iterator();
 						while(bunk.hasNext()){
 							Bunker bunker = (Bunker) bunk.next();
@@ -251,6 +275,12 @@ public class Arena extends JPanel implements MouseMotionListener{
 					if(canShoot % 35 == 0){
 						aiBullets.add(new Bullet(a.getX(), a.getY(), Bullet.VELOCITY_Y_FROM_ALIEN));
 						canShoot+=7;
+						if(wave > 0){
+							System.out.println("RELEASE THE MOTHERHSIP!");
+							if(mothership == null || !mothership.isAlive()){
+								mothership = new Mothership(10, 5, 3, 0);
+							}
+						}
 					}
 				}
 				if((a.getY() >= tank.getY()-20)){

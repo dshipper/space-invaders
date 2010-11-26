@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 
 public class Alien extends GameObject {
 	final static int DIAMETER = 42;
-	private BufferedImage img;
+	protected BufferedImage img;
 
 	public Alien(int x, int y, int velocityX, int velocityY) {
 		super(x, y, velocityX, velocityY, DIAMETER, DIAMETER);
@@ -19,17 +19,6 @@ public class Alien extends GameObject {
 
 	}
 
-	public void setY(int y){
-		this.y = y;
-	}
-
-	public int getY(){
-		return y;
-	}
-	
-	public int getX(){
-		return x;
-	}
 	
 	public int getXVelocity(){
 		return velocityX;
@@ -66,7 +55,4 @@ public class Alien extends GameObject {
 		}
 	}
 
-	public boolean isAlive() {
-		return isAlive;
-	}
 }
